@@ -17,11 +17,11 @@ namespace DominandoEFCore
             // HealthCheckBancoDeDados();
 
             // warmup
-            new ApplicationContext().Departamentos.AsNoTracking().Any();
-            _count = 0;
-            GerenciarEstadoDaConexao(false);
-            _count = 0;
-            GerenciarEstadoDaConexao(true);
+            // new ApplicationContext().Departamentos.AsNoTracking().Any();
+            // _count = 0;
+            // GerenciarEstadoDaConexao(false);
+            // _count = 0;
+            // GerenciarEstadoDaConexao(true);
         }
 
         static void EnsureCreatedAndDeleted()
@@ -79,6 +79,25 @@ namespace DominandoEFCore
             time.Stop();
             var mensagem = $"Tempo : {time.Elapsed.ToString()}. Gerenciando estado: {gerenciarEstadoConexao}. Contador: {_count} \n";
             Console.Write(mensagem);
+        }
+
+        static void ExecuteSQL()
+        {
+            using var db = new ApplicationContext();
+
+            // Primeira opção
+            using (var cmd = db.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.ExecuteNonQuery();
+            }
+
+            // Segunda opção
+            var descricao = "Teste";
+            db.Database.ExecuteSqlRaw("UPDATE Departamentos SET Descricao={0} WHERE Id=1", descricao);
+
+            // Terceira opção
+            db.Database.ExecuteSqlInterpolated($"UPDATE Departamentos SET Descricao={descricao} WHERE Id=1");
         }
     }
 }
