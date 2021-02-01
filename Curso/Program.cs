@@ -1,5 +1,6 @@
 ﻿using System;
 using Curso.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -9,7 +10,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            GapDoEnsureCreated();
+            // EnsureCreatedAndDeleted();
+            // GapDoEnsureCreated();
+            HealthCheckBancoDeDados();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -29,6 +32,21 @@ namespace DominandoEFCore
 
             var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
             databaseCreator.CreateTables();
+        }
+
+        static void HealthCheckBancoDeDados()
+        {
+            using var db = new ApplicationContext();
+            var canConnection = db.Database.CanConnect();
+
+            if (canConnection)
+            {
+                Console.WriteLine("Posso me conectar.");
+            }
+            else
+            {
+                Console.Write("Não posso me conectar.");
+            }
         }
     }
 }
