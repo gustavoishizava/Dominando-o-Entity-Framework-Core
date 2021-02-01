@@ -65,3 +65,5 @@ C:\Users\Gustavo C. Ishizava\Desktop\Cursos\Desenvolvedor.io\Dominando o Entity 
 C:\Users\Gustavo C. Ishizava\Desktop\Cursos\Desenvolvedor.io\Dominando o Entity Framework Core\curso\obj\Debug\net5.0\ref\DominandoEFCore.dll
 C:\Users\Gustavo C. Ishizava\Desktop\Cursos\Desenvolvedor.io\Dominando o Entity Framework Core\curso\obj\Debug\net5.0\DominandoEFCore.pdb
 C:\Users\Gustavo C. Ishizava\Desktop\Cursos\Desenvolvedor.io\Dominando o Entity Framework Core\curso\obj\Debug\net5.0\DominandoEFCore.genruntimeconfig.cache
+C:\Users\Gustavo C. Ishizava\Desktop\Cursos\Desenvolvedor.io\Dominando o Entity Framework Core\curso\bin\Debug\net5.0\Humanizer.dll
+C:\Users\Gustavo C. Ishizava\Desktop\Cursos\Desenvolvedor.io\Dominando o Entity Framework Core\curso\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
