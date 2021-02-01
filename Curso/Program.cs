@@ -27,7 +27,8 @@ namespace DominandoEFCore
             // MigracoesPendentes();
             // AplicarMigracaoEmtempoExecucao();
             // TodasMigracoes();
-            MigracaoJaAplicadas();
+            // MigracaoJaAplicadas();
+            ScriptGeralDoBancoDeDados();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -186,6 +187,14 @@ namespace DominandoEFCore
             {
                 Console.WriteLine($"Migracao: {migracao}");
             }
+        }
+
+        static void ScriptGeralDoBancoDeDados()
+        {
+            using var db = new ApplicationContext();
+            var script = db.Database.GenerateCreateScript();
+
+            Console.WriteLine(script);
         }
     }
 }
