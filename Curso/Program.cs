@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq;
+using Curso.Domain;
 
 namespace DominandoEFCore
 {
@@ -22,6 +23,7 @@ namespace DominandoEFCore
             // GerenciarEstadoDaConexao(false);
             // _count = 0;
             // GerenciarEstadoDaConexao(true);
+            SqlInjection();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -98,6 +100,40 @@ namespace DominandoEFCore
 
             // Terceira opção
             db.Database.ExecuteSqlInterpolated($"UPDATE Departamentos SET Descricao={descricao} WHERE Id=1");
+        }
+
+        static void SqlInjection()
+        {
+            using var db = new ApplicationContext();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Departamentos.AddRange(
+                new Departamento
+                {
+                    Descricao = "Departamento 01"
+                },
+                new Departamento
+                {
+                    Descricao = "Departamento 02"
+                }
+            );
+
+            db.SaveChanges();
+
+            var descricao = "Departamento 01";
+            // Maneira correta
+            // db.Database.ExecuteSqlRaw("UPDATE Departamentos SET Descricao='DepartamentoAlterado' WHERE Descricao={0}", descricao);
+
+            // Maneira incorreta
+            descricao = "Teste ' or 1='1";
+            db.Database.ExecuteSqlRaw($"UPDATE Departamentos SET Descricao='Ataque SQL Injection' WHERE Descricao='{descricao}'");
+
+            foreach (var departamento in db.Departamentos.AsNoTracking())
+            {
+                Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao}");
+            }
         }
     }
 }
