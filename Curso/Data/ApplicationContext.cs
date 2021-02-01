@@ -14,9 +14,9 @@ namespace Curso.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseSqlServer("Server=DESKTOP-85C0SHU\\SQLEXPRESS01;Database=CursoEFCore;Trusted_Connection=True;")
-                .EnableSensitiveDataLogging()
-                .LogTo(Console.WriteLine, LogLevel.Information);
+                .UseSqlServer("Data source=DESKTOP-85C0SHU\\SQLEXPRESS01;Initial Catalog=CursoEFCore;Integrated Security=True;pooling=true")
+                .EnableSensitiveDataLogging();
+                // .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }

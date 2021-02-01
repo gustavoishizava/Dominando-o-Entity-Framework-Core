@@ -1,8 +1,10 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System;
 using Curso.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq;
 
 namespace DominandoEFCore
 {
@@ -12,7 +14,14 @@ namespace DominandoEFCore
         {
             // EnsureCreatedAndDeleted();
             // GapDoEnsureCreated();
-            HealthCheckBancoDeDados();
+            // HealthCheckBancoDeDados();
+
+            // warmup
+            new ApplicationContext().Departamentos.AsNoTracking().Any();
+            _count = 0;
+            GerenciarEstadoDaConexao(false);
+            _count = 0;
+            GerenciarEstadoDaConexao(true);
         }
 
         static void EnsureCreatedAndDeleted()
@@ -47,6 +56,29 @@ namespace DominandoEFCore
             {
                 Console.Write("Não posso me conectar.");
             }
+        }
+
+        static int _count;
+        static void GerenciarEstadoDaConexao(bool gerenciarEstadoConexao)
+        {
+            using var db = new ApplicationContext();
+            var time = Stopwatch.StartNew();
+
+            var conexao = db.Database.GetDbConnection();
+            conexao.StateChange += (_, __) => ++_count;
+            if (gerenciarEstadoConexao)
+            {
+                conexao.Open();
+            }
+
+            for (var i = 0; i < 200; i++)
+            {
+                db.Departamentos.AsNoTracking().Any();
+            }
+
+            time.Stop();
+            var mensagem = $"Tempo : {time.Elapsed.ToString()}. Gerenciando estado: {gerenciarEstadoConexao}. Contador: {_count} \n";
+            Console.Write(mensagem);
         }
     }
 }
