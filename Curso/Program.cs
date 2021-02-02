@@ -31,7 +31,9 @@ namespace DominandoEFCore
             // ScriptGeralDoBancoDeDados();
             // CarregamentoAdiantado();
             // CarregamentoExplicito();
-            CarregamentoLento();
+            // CarregamentoLento();
+
+            FiltroGlobal();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -269,7 +271,7 @@ namespace DominandoEFCore
             var departamentos = db.Departamentos.ToList();
 
             foreach (var departamento in departamentos)
-            {                
+            {
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine($"Departamento: {departamento.Descricao}");
 
@@ -313,6 +315,64 @@ namespace DominandoEFCore
                                 CPF = "00",
                                 RG = "00",
                                 Nome = "Vitória"
+                            }
+                        }
+                     }
+                );
+
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
+        }
+
+        static void FiltroGlobal()
+        {
+
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.Where(x => x.Id > 0).ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluído: {departamento.Excluido}");
+            }
+        }
+
+        static void Setup(ApplicationContext db)
+        {
+            // db.Database.EnsureDeleted();
+
+            if (db.Database.EnsureCreated())
+            {
+                db.Departamentos.AddRange(
+                    new Departamento
+                    {
+                        Ativo = true,
+                        Descricao = "Departamento 01",
+                        Funcionarios = new System.Collections.Generic.List<Funcionario>{
+                            new Funcionario{
+                                CPF = "00",
+                                RG = "00",
+                                Nome = "Gustavo"
+                            }
+                        },
+                        Excluido = true
+                    },
+                     new Departamento
+                     {
+                         Ativo = true,
+                         Descricao = "Departamento 02",
+                         Funcionarios = new System.Collections.Generic.List<Funcionario>{
+                            new Funcionario{
+                                CPF = "00",
+                                RG = "00",
+                                Nome = "Vitória"
+                            },
+                            new Funcionario{
+                                CPF = "00",
+                                RG = "00",
+                                Nome = "Eduarda"
                             }
                         }
                      }
