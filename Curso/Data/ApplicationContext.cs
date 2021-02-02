@@ -15,8 +15,9 @@ namespace Curso.Data
         {
             optionsBuilder
                 .UseSqlServer("Data source=DESKTOP-85C0SHU\\SQLEXPRESS01;Initial Catalog=CursoEFCore;Integrated Security=True;pooling=true")
-                .EnableSensitiveDataLogging();
-                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .EnableSensitiveDataLogging()
+                .UseLazyLoadingProxies()
+                .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }
