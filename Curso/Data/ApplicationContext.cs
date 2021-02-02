@@ -22,7 +22,7 @@ namespace Curso.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {            
-            modelBuilder.Entity<Departamento>().HasQueryFilter(x => !x.Excluido);
+            // modelBuilder.Entity<Departamento>().HasQueryFilter(x => !x.Excluido);
         }
     }
 }
