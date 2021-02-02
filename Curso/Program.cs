@@ -30,7 +30,8 @@ namespace DominandoEFCore
             // MigracaoJaAplicadas();
             // ScriptGeralDoBancoDeDados();
             // CarregamentoAdiantado();
-            CarregamentoExplicito();
+            // CarregamentoExplicito();
+            CarregamentoLento();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -241,6 +242,34 @@ namespace DominandoEFCore
 
                 }
 
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\nFuncionário: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nNenhum funcionário encontrado!");
+                }
+            }
+        }
+
+        static void CarregamentoLento()
+        {
+            using var db = new ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            // db.ChangeTracker.LazyLoadingEnabled = false;
+
+            var departamentos = db.Departamentos.ToList();
+
+            foreach (var departamento in departamentos)
+            {                
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine($"Departamento: {departamento.Descricao}");
 
