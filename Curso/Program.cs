@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 using System;
 using Curso.Data;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,8 @@ namespace DominandoEFCore
 
             // FiltroGlobal();
             // IgnorandoFiltroGlobal();
-            ConsultaProjetada();
+            // ConsultaProjetada();
+            ConsultaParametrizada();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -377,6 +379,23 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"Nome: {funcionario}");
                 }
+            }
+        }
+
+        static void ConsultaParametrizada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var id = 0;
+            var departamentos = db.Departamentos
+                .FromSqlRaw("SELECT * FROM Departamentos WHERE id > {0}", id)
+                .Where(x => !x.Excluido)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
             }
         }
 
