@@ -37,7 +37,8 @@ namespace DominandoEFCore
             // FiltroGlobal();
             // IgnorandoFiltroGlobal();
             // ConsultaProjetada();
-            ConsultaParametrizada();
+            // ConsultaParametrizada();
+            ConsultaInterpolada();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -391,6 +392,22 @@ namespace DominandoEFCore
             var departamentos = db.Departamentos
                 .FromSqlRaw("SELECT * FROM Departamentos WHERE id > {0}", id)
                 .Where(x => !x.Excluido)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        static void ConsultaInterpolada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var id = 0;
+            var departamentos = db.Departamentos
+                .FromSqlInterpolated($"SELECT * FROM Departamentos WHERE id > {id}")
                 .ToList();
 
             foreach (var departamento in departamentos)
