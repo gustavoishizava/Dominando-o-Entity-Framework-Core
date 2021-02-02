@@ -38,7 +38,8 @@ namespace DominandoEFCore
             // IgnorandoFiltroGlobal();
             // ConsultaProjetada();
             // ConsultaParametrizada();
-            ConsultaInterpolada();
+            // ConsultaInterpolada();
+            ConsultaComTag();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -408,6 +409,21 @@ namespace DominandoEFCore
             var id = 0;
             var departamentos = db.Departamentos
                 .FromSqlInterpolated($"SELECT * FROM Departamentos WHERE id > {id}")
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+         static void ConsultaComTag()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .TagWith("Estou enviando um comentário para o servidor")
                 .ToList();
 
             foreach (var departamento in departamentos)
