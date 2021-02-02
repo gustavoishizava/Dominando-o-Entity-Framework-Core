@@ -39,7 +39,8 @@ namespace DominandoEFCore
             // ConsultaProjetada();
             // ConsultaParametrizada();
             // ConsultaInterpolada();
-            ConsultaComTag();
+            // ConsultaComTag();
+            EntendendoConsulta1NN1();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -417,7 +418,7 @@ namespace DominandoEFCore
             }
         }
 
-         static void ConsultaComTag()
+        static void ConsultaComTag()
         {
             using var db = new ApplicationContext();
             Setup(db);
@@ -429,6 +430,35 @@ namespace DominandoEFCore
             foreach (var departamento in departamentos)
             {
                 Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        static void EntendendoConsulta1NN1()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .Include(x => x.Funcionarios)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+
+                foreach (var funcionario in departamento.Funcionarios)
+                {
+                    Console.WriteLine($"Nome: {funcionario.Nome}");
+                }
+            }
+
+            var funcionarios = db.Funcionarios
+                .Include(x => x.Departamento)
+                .ToList();
+
+            foreach (var funcionario in funcionarios)
+            {
+                Console.WriteLine($"Nome: {funcionario.Nome} | Departamento: {funcionario.Departamento.Descricao}");               
             }
         }
 
