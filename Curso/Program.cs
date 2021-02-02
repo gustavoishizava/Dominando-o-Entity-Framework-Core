@@ -28,7 +28,8 @@ namespace DominandoEFCore
             // AplicarMigracaoEmtempoExecucao();
             // TodasMigracoes();
             // MigracaoJaAplicadas();
-            ScriptGeralDoBancoDeDados();
+            // ScriptGeralDoBancoDeDados();
+            CarregamentoAdiantado();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -195,6 +196,68 @@ namespace DominandoEFCore
             var script = db.Database.GenerateCreateScript();
 
             Console.WriteLine(script);
+        }
+
+        static void CarregamentoAdiantado()
+        {
+            using var db = new ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db.Departamentos.Include(x => x.Funcionarios);
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\nFuncionário: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nNenhum funcionário encontrado!");
+                }
+            }
+        }
+
+        static void SetupTiposCarregamentos(ApplicationContext db)
+        {
+            if (!db.Departamentos.Any())
+            {
+                db.Departamentos.AddRange(
+                    new Departamento
+                    {
+                        Ativo = true,
+                        Descricao = "Departamento 01",
+                        Funcionarios = new System.Collections.Generic.List<Funcionario>{
+                            new Funcionario{
+                                CPF = "00",
+                                RG = "00",
+                                Nome = "Gustavo"
+                            }
+                        }
+                    },
+                     new Departamento
+                     {
+                         Ativo = true,
+                         Descricao = "Departamento 02",
+                         Funcionarios = new System.Collections.Generic.List<Funcionario>{
+                            new Funcionario{
+                                CPF = "00",
+                                RG = "00",
+                                Nome = "Vitória"
+                            }
+                        }
+                     }
+                );
+
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
         }
     }
 }
