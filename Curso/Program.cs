@@ -33,7 +33,8 @@ namespace DominandoEFCore
             // CarregamentoExplicito();
             // CarregamentoLento();
 
-            FiltroGlobal();
+            // FiltroGlobal();
+            IgnorandoFiltroGlobal();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -332,6 +333,20 @@ namespace DominandoEFCore
             Setup(db);
 
             var departamentos = db.Departamentos.Where(x => x.Id > 0).ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluído: {departamento.Excluido}");
+            }
+        }
+
+        static void IgnorandoFiltroGlobal()
+        {
+
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.IgnoreQueryFilters().Where(x => x.Id > 0).ToList();
 
             foreach (var departamento in departamentos)
             {
